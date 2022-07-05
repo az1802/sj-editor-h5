@@ -1,0 +1,24 @@
+{
+  "extends": [
+    "stylelint-config-standard-scss",
+    "stylelint-config-recommended-vue",
+    "stylelint-config-recommended-vue/scss",
+    "stylelint-config-rational-order",
+    "stylelint-config-prettier"
+  ],
+  "plugins": [
+    "stylelint-order",
+    "stylelint-config-rational-order/plugin"
+  ],
+  "rules": {
+    "order/properties-order": [],
+    "plugin/rational-order": [true, {
+      "border-in-box-model": false,
+      "empty-line-between-groups": false,
+    }],
+    "indentation": 4,
+
+
+  },
+  "customSyntax": "postcss-html",
+}
