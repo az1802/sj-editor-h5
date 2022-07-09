@@ -22,8 +22,13 @@ export default defineConfig(()=>{
         "@router":resolveApp("src/router"),
         "@store":resolveApp("src/store"),
         "@utils":resolveApp("src/utils"),
-        "@api":resolveApp("src/apis"),
+        "@apis":resolveApp("src/apis"),
       }
+    },
+    server:{
+      port:3001,
+      // strictPort:true,
+      // open:true
     }
   }
 })

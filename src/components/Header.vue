@@ -9,10 +9,10 @@ const smMode = ref(true);
   <a-row type="flex" justify="space-between" align="center">
     <a-col :span="6" class="logo-wrapper">
       <router-link to="/">
-        <img src="../assets/logo.png" alt="" class="img" />
+        <!-- <img src="../assets/logo.png" alt="" class="img" /> -->
       </router-link>
     </a-col>
-    <a-col :span="12" class="right-col space-x-10">
+    <a-col :span="12" class="space-x-10 right-col">
       <a-button type="primary" shape="round">
         <router-link to="/login">登录</router-link>
       </a-button>
