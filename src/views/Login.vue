@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
-import { ref } from 'vue';
+import { getAuthCode } from '@apis/user';
+import { message } from 'ant-design-vue'
+import axios from 'axios';
+import { ref, reactive } from 'vue';
 const counter = ref(60);
 const codeButtonDisable = ref(false);
 
-const loginInfo = ref({
-  phoneNumber: 'sunjie',
+const loginInfo = reactive({
+  phoneNumber: '17688479248',
   password: '1234',
   code: 1233,
 });
@@ -28,8 +31,15 @@ function resetCounter() {
   counter.value = 60;
 }
 
-async function login() {}
+async function login() {
+  let res = await axios.get('/a');
+  console.log(res);
+}
 async function getCode() {
+  let code = await getAuthCode({
+    phoneNumber: loginInfo.phoneNumber,
+  });
+  console.log('code: ', code);
   startCounter();
 }
 </script>
@@ -62,7 +72,7 @@ async function getCode() {
           <a-form-item>
             <a-button type="primary" @click="login">登录</a-button>
             <a-button type="primary" @click="getCode" :disabled="codeButtonDisable">{{
-              counter == 60 ? '获取验证码' : `${counter}s后重发`
+                counter == 60 ? '获取验证码' : `${counter}s后重发`
             }}</a-button>
           </a-form-item>
         </a-form>
