@@ -21,6 +21,7 @@ export default defineConfig(()=>{
         "@components":resolveApp("src/components"),
         "@router":resolveApp("src/router"),
         "@store":resolveApp("src/store"),
+        "@hooks":resolveApp("src/hooks"),
         "@utils":resolveApp("src/utils"),
         "@apis":resolveApp("src/apis"),
       }

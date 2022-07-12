@@ -27,8 +27,10 @@ defineEmits({
 
 <template>
   <div class="test-a">
-    <div>input---- <input type="text" v-model="val" /></div>
-    <div @click="$emit('change', 124)">{{ v1 }}</div>
+    <div>
+      input----
+      <InputEdit />
+    </div>
   </div>
 </template>
 

@@ -1,25 +1,25 @@
 <script setup lang="ts">
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
-import { getAuthCode } from '@apis/user';
-import { message } from 'ant-design-vue'
+import { userLogin } from '@hooks/userLogin';
+import { message } from 'ant-design-vue';
+import { ref, toRaw } from 'vue';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 import axios from 'axios';
-import { ref, reactive } from 'vue';
+const { loginInfo, getVeriCode, login } = userLogin();
 const counter = ref(60);
 const codeButtonDisable = ref(false);
+const router = useRouter();
+const store = useStore();
 
-const loginInfo = reactive({
-  phoneNumber: '17688479248',
-  password: '1234',
-  code: 1233,
-});
-
-let timeId;
+let timeId: number;
 
 function startCounter() {
   counter.value = 60;
+  codeButtonDisable.value = true;
   timeId = setInterval(() => {
     if (counter.value == 0) {
-      clearInterval(timeId);
+      resetCounter();
     } else {
       counter.value -= 1;
     }
@@ -29,18 +29,26 @@ function startCounter() {
 function resetCounter() {
   clearInterval(timeId);
   counter.value = 60;
+  codeButtonDisable.value = false;
 }
 
-async function login() {
-  let res = await axios.get('/a');
-  console.log(res);
+async function loginIn() {
+  store.dispatch('loginAndFetch', toRaw(loginInfo)).then((rawData) => {
+    console.log('rawData: ', rawData);
+    message.success('登录成功 2秒后跳转首页');
+    setTimeout(() => {
+      router.push('/');
+    }, 2000);
+  });
 }
 async function getCode() {
-  let code = await getAuthCode({
-    phoneNumber: loginInfo.phoneNumber,
-  });
-  console.log('code: ', code);
-  startCounter();
+  if (codeButtonDisable.value) {
+    return;
+  }
+  let veriCode = getVeriCode();
+  if (veriCode) {
+    startCounter();
+  }
 }
 </script>
 
@@ -48,7 +56,7 @@ async function getCode() {
   <div class="login-page">
     <a-row>
       <a-col :span="12" class="aside">
-        <img src="@assets/logo.png" alt="" />
+        <img src="@assets/login.png" alt="" />
       </a-col>
       <a-col :span="12" class="login-area">
         <a-form :model="loginInfo" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
@@ -67,13 +75,16 @@ async function getCode() {
             </a-input>
           </a-form-item>
           <a-form-item label="验证码">
-            <a-input v-model:value="loginInfo.code" placeholder="请输入验证码"></a-input>
+            <a-input
+              v-model:value="loginInfo.veriCode"
+              placeholder="请输入验证码"
+            ></a-input>
           </a-form-item>
           <a-form-item>
-            <a-button type="primary" @click="login">登录</a-button>
-            <a-button type="primary" @click="getCode" :disabled="codeButtonDisable">{{
-                counter == 60 ? '获取验证码' : `${counter}s后重发`
-            }}</a-button>
+            <a-button type="primary" @click="loginIn">登录</a-button>
+            <a-button type="primary" @click="getCode" :disabled="codeButtonDisable">
+              {{ counter == 60 ? '获取验证码' : `${counter}s后重发` }}
+            </a-button>
           </a-form-item>
         </a-form>
       </a-col>
@@ -91,7 +102,7 @@ async function getCode() {
 .aside {
   height: 100vh;
   background-color: #1a1919;
-  background-image: url('~@/assets/login.png');
+  background-image: url('@/assets/login.png');
   background-size: cover;
   background-repeat: no-repeat;
 }
